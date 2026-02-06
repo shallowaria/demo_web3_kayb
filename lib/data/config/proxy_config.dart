@@ -29,6 +29,6 @@ class ProxyConfig {
 /// 3. Configure port (check your proxy tool settings)
 const ProxyConfig proxyConfig = ProxyConfig(
   enabled: true, // Set to true to enable proxy
-  host: '127.0.0.1', // Proxy host address
+  host: '10.0.2.2', // Android emulator special IP to access host machine (use 127.0.0.1 for desktop)
   port: 7897, // Proxy port (change to your proxy port)
 );

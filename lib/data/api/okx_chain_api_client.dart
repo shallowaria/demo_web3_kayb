@@ -19,7 +19,9 @@ class OkxChainApiClient {
   /// Generates authentication headers for OKX API requests
   Map<String, String> _generateAuthHeaders(String method, String requestPath,
       {String body = ''}) {
-    final timestamp = DateTime.now().toUtc().toIso8601String();
+    // OKX API requires ISO 8601 format with milliseconds (3 digits), not microseconds
+    final now = DateTime.now().toUtc();
+    final timestamp = '${now.toIso8601String().split('.')[0]}.${now.millisecond.toString().padLeft(3, '0')}Z';
 
     // Create signature: timestamp + method + requestPath + body
     final signatureString = '$timestamp$method$requestPath$body';
@@ -34,6 +36,7 @@ class OkxChainApiClient {
     final signature = base64.encode(digest.bytes);
 
     return {
+      'OK-ACCESS-PROJECT': config.projectId,
       'OK-ACCESS-KEY': config.apiKey,
       'OK-ACCESS-SIGN': signature,
       'OK-ACCESS-TIMESTAMP': timestamp,
@@ -48,12 +51,15 @@ class OkxChainApiClient {
   Future<List<BlockchainChain>> getSupportedChains() async {
     if (!config.isConfigured) {
       throw Exception(
-          'OKX API not configured. Please provide API key, secret key, and passphrase.');
+          'OKX API not configured. Please provide project ID, API key, secret key, and passphrase.');
     }
 
     try {
       // Generate authentication headers
       final authHeaders = _generateAuthHeaders('GET', _requestPath);
+      print('🔑 Making request to: $_supportedChainsUrl');
+      print('🔑 Timestamp: ${authHeaders['OK-ACCESS-TIMESTAMP']}');
+      print('🔑 Auth headers: ${authHeaders.keys.join(", ")}');
 
       final response = await _dio.get(
         _supportedChainsUrl,
@@ -84,6 +90,10 @@ class OkxChainApiClient {
         );
       }
     } on DioException catch (e) {
+      print('❌ DioException type: ${e.type}');
+      print('❌ Error message: ${e.message}');
+      print('❌ Error: ${e.error}');
+
       if (e.type == DioExceptionType.connectionTimeout) {
         throw DioException(
           requestOptions: e.requestOptions,

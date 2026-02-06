@@ -1,10 +1,12 @@
 /// Configuration for OKX API authentication
 class OkxApiConfig {
+  final String projectId;
   final String apiKey;
   final String secretKey;
   final String passphrase;
 
   const OkxApiConfig({
+    required this.projectId,
     required this.apiKey,
     required this.secretKey,
     required this.passphrase,
@@ -12,5 +14,8 @@ class OkxApiConfig {
 
   /// Check if configuration is complete
   bool get isConfigured =>
-      apiKey.isNotEmpty && secretKey.isNotEmpty && passphrase.isNotEmpty;
+      projectId.isNotEmpty &&
+      apiKey.isNotEmpty &&
+      secretKey.isNotEmpty &&
+      passphrase.isNotEmpty;
 }
