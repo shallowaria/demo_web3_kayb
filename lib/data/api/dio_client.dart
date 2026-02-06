@@ -26,23 +26,17 @@ class DioClient {
     );
 
     // Configure proxy if enabled
-    if (proxyConfig.isConfigured) {
-      print('🔧 Proxy configured: ${proxyConfig.proxyUrl}');
-      _dio.httpClientAdapter = IOHttpClientAdapter(
-        createHttpClient: () {
-          final client = HttpClient();
-          client.findProxy = (uri) {
-            print('🌐 Using proxy for: $uri');
-            return proxyConfig.proxyUrl;
-          };
-          client.badCertificateCallback =
-              (X509Certificate cert, String host, int port) => true;
-          return client;
-        },
-      );
-    } else {
-      print('⚠️ Proxy NOT configured - enabled: ${proxyConfig.enabled}, port: ${proxyConfig.port}');
-    }
+    _dio.httpClientAdapter = IOHttpClientAdapter(
+      createHttpClient: () {
+        final client = HttpClient();
+        client.findProxy = (uri) {
+          return proxyConfig.proxyUrl;
+        };
+        client.badCertificateCallback =
+            (X509Certificate cert, String host, int port) => true;
+        return client;
+      },
+    );
   }
 
   Dio get dio => _dio;

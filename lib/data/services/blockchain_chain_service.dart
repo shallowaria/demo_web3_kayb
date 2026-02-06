@@ -15,8 +15,9 @@ class BlockchainChainService {
   ///
   /// Uses cached data if available to avoid redundant API calls
   /// Returns a list of [BlockchainChain] objects
-  Future<List<BlockchainChain>> fetchSupportedChains(
-      {bool forceRefresh = false}) async {
+  Future<List<BlockchainChain>> fetchSupportedChains({
+    bool forceRefresh = false,
+  }) async {
     if (_cachedChains != null && !forceRefresh) {
       return _cachedChains!;
     }
