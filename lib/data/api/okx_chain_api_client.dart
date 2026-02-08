@@ -17,11 +17,23 @@ class OkxChainApiClient {
   OkxChainApiClient({required this.config});
 
   /// Generates authentication headers for OKX API requests
-  Map<String, String> _generateAuthHeaders(String method, String requestPath,
-      {String body = ''}) {
+  Map<String, String> _generateAuthHeaders(
+    String method,
+    String requestPath, {
+    String body = '',
+  }) {
     // OKX API requires ISO 8601 format with milliseconds (3 digits), not microseconds
+    // Convient way:final timestamp = DateTime.now().toUtc().toIso8601String()
+    // Manually build timestamp to avoid fragile split() operations that can fail on some Android ROMs
     final now = DateTime.now().toUtc();
-    final timestamp = '${now.toIso8601String().split('.')[0]}.${now.millisecond.toString().padLeft(3, '0')}Z';
+    final timestamp =
+        '${now.year.toString().padLeft(4, '0')}-'
+        '${now.month.toString().padLeft(2, '0')}-'
+        '${now.day.toString().padLeft(2, '0')}T'
+        '${now.hour.toString().padLeft(2, '0')}:'
+        '${now.minute.toString().padLeft(2, '0')}:'
+        '${now.second.toString().padLeft(2, '0')}.'
+        '${now.millisecond.toString().padLeft(3, '0')}Z';
 
     // Create signature: timestamp + method + requestPath + body
     final signatureString = '$timestamp$method$requestPath$body';
@@ -51,7 +63,8 @@ class OkxChainApiClient {
   Future<List<BlockchainChain>> getSupportedChains() async {
     if (!config.isConfigured) {
       throw Exception(
-          'OKX API not configured. Please provide project ID, API key, secret key, and passphrase.');
+        'OKX API not configured. Please provide project ID, API key, secret key, and passphrase.',
+      );
     }
 
     try {
@@ -68,7 +81,8 @@ class OkxChainApiClient {
 
       if (response.statusCode == 200) {
         final chainResponse = BlockchainChainResponse.fromJson(
-            response.data as Map<String, dynamic>);
+          response.data as Map<String, dynamic>,
+        );
 
         if (chainResponse.isSuccess) {
           return chainResponse.data;
