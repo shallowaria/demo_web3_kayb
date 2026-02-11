@@ -12,7 +12,7 @@ class ChainListItemWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       contentPadding: const EdgeInsets.symmetric(
-        horizontal: 16.0,
+        horizontal: 24.0,
         vertical: 8.0,
       ),
       leading: CircleAvatar(

@@ -3,10 +3,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:web3_demo/data/constants.dart';
 import 'package:web3_demo/data/notifiers.dart';
 import 'package:web3_demo/views/pages/support_chain_page.dart';
-import 'package:web3_demo/views/pages/transition_history_page.dart';
+import 'package:web3_demo/views/pages/transaction_history_page.dart';
 import 'package:web3_demo/widgets/navbar_widget.dart';
 
-List<Widget> pages = [SupportChainPage(), TransitionHistoryPage()];
+List<Widget> pages = [SupportChainPage(), TransactionHistoryPage()];
 
 class WidgetTree extends StatelessWidget {
   const WidgetTree({super.key});
