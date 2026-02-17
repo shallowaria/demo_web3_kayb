@@ -1,3 +1,15 @@
+// 1. 手动添加 buildscript 块
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        // 添加 Google 服务插件的路径
+        classpath("com.google.gms:google-services:4.4.0")
+    }
+}
+
 allprojects {
     repositories {
         google()
